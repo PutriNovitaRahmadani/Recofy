@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Rekomendasi Produk - TokoLabs</title>
+  <link rel="icon" href="{{ asset('assets/img/LogoTokolabs.png') }}" type="image/png">
   <link rel="stylesheet" href="{{ asset('assets/css/etalase.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -46,7 +47,7 @@
         <div class="greetingg">Hi, {{ auth()->user()->username ?? auth()->user()->name }}!</div>
           <a href="{{ route('profile') }}">
             <div class="avatar" style="cursor: pointer;">
-              <img src="{{ auth()->user()->img_profile ? asset('img_profiles/' . auth()->user()->img_profile) : asset('assets/img/profil.jpg') }}" 
+              <img src="{{ auth()->user()->img_profile ? asset('img_profiles/' . auth()->user()->img_profile) : asset('assets/img/pp kosong.jpg') }}" 
                   alt="Profil" />
           </div>
         </a>

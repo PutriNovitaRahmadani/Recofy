@@ -42,7 +42,8 @@
 </style>
 
   <meta charset="UTF-8">
-  <title>Profile - TokoLabs</title>
+  <title>Pengaturan Akun - TokoLabs</title>
+  <link rel="icon" href="{{ asset('assets/img/LogoTokolabs.png') }}" type="image/png">
   <link rel="stylesheet" href="{{ asset('assets/css/index_profile.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -55,33 +56,48 @@
 
     <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
+  <div class="menu-container">
     <div class="logo">
-  <div class="brand">
-    <i class="fa-solid fa-shop"></i>
-    <span class="brand-text">TokoLabs</span>
-  </div>
-  <div class="bars-wrapper" id="toggleSidebar">
-    <i class="fa-solid fa-bars"></i>
-  </div>
-</div>
+      <div class="brand">
+        <i class="fa-solid fa-shop"></i>
+        <span class="brand-text">TokoLabs</span>
+      </div>
+      <div class="bars-wrapper" id="toggleSidebar">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </div>
     <ul>
       <li><a href="dashboard"><i class="fa-solid fa-gauge-high"></i> <span class="menu-text">Dashboard</span></a></li>
       <li><a href="etalase"><i class="fa-solid fa-cart-shopping"></i> <span class="menu-text">Rekomendasi Produk</span></a></li>
       <li><a href="schedule"><i class="fa-solid fa-calendar-days"></i> <span class="menu-text">Scheduler</span></a></li>
-      <li><a href="profile"><i class="fa-solid fa-user-gear"></i> <span class="menu-text">Pengaturan Akun</span></a></li>
+      <li class="akun active"><a href="#"><i class="fa-solid fa-gear"></i> <span class="menu-text">Pengaturan Akun</span></a></li>
     </ul>
-  </aside>
+  </div>
+
+  <div class="logout-wrapper">
+    <a href="#" onclick="konfirmasiLogout()" class="logout-btn">
+  <i class="fa-solid fa-right-from-bracket"></i>
+  <span class="logout-text">Keluar</span>
+</a>
+  </div>
+</aside>
+
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <div class="navbar">
       <div class="nav-title">Pengaturan Akun</div>
       <div class="user-area">
-        <div class="greeting">Hi, {{ $user->username ?? $user->name }}!</div>
+        <div class="greetingg">Hi, {{ $user->username ?? $user->name }} </div>
         <div class="avatar">
           <img 
-            src="{{ $user->img_profile ? asset('img_profiles/' . $user->img_profile) : asset('assets/img/profil.jpg') }}" 
+            src="{{ $user->img_profile ? asset('img_profiles/' . $user->img_profile) : asset('assets/img/pp kosong.jpg') }}" 
             alt="Profil" />
+        </div>
+        <div class="dropdown">
+          <div class="dropdown-toggle" onclick="toggleDropdown()">
+
+          </div>
         </div>
       </div>
     </div>
@@ -106,7 +122,7 @@
         <div class="profile-section">
           <div class="profile-pic-container">
             <img 
-              src="{{ $user->img_profile ? asset('img_profiles/' . $user->img_profile) : asset('assets/img/profil.jpg') }}" 
+              src="{{ $user->img_profile ? asset('img_profiles/' . $user->img_profile) : asset('assets/img/pp kosong.jpg') }}" 
               alt="Profile" 
               class="profile-pic" 
             />
@@ -193,6 +209,13 @@
     }
   </script>
   <script>
+  // Toggle dropdown menu saat avatar diklik
+  function toggleDropdown() {
+    const menu = document.getElementById("dropdownMenu");
+    if (menu) {
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  }
 
   // Konfirmasi logout
   function konfirmasiLogout() {
@@ -201,6 +224,15 @@
       window.location.href = "/";
     }
   }
+
+  // Sembunyikan dropdown jika klik di luar
+  document.addEventListener("click", function (event) {
+    const dropdown = document.querySelector(".dropdown");
+    const menu = document.getElementById("dropdownMenu");
+    if (dropdown && menu && !dropdown.contains(event.target)) {
+      menu.style.display = "none";
+    }
+  });
 
   // Toggle sidebar jika tombol tersedia
   document.addEventListener("DOMContentLoaded", function () {

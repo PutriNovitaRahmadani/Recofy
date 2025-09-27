@@ -272,12 +272,13 @@ body {
 
 .kategori-saat-ini {
   display: flex;
-  padding: 40px 30px;
+  padding: 10px 30px;  /* lebih rapat */
   flex-direction: column;
   gap: 12px;
   margin-bottom: 5px;
   padding-top: 3px;
 }
+
 
 .btn-simpan {
   background-color: #4f46e5;
@@ -342,14 +343,21 @@ body {
   height: 18px;
 }
 
+.kategori-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 20px 30px 15px; /* jarak atas & bawah rapi */
+}
 
 .kategori-tersedia {
   display: grid;
-  padding: 0px 20px;
   margin-top: 1px;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 15px;
+  padding: 0 30px 30px; /* padding kiri-kanan + bawah */
 }
+
 .kategori-item {
   border: 1px solid #ddd;
   border-radius: 8px;

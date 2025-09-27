@@ -10,6 +10,6 @@ class Category extends Model
 
     public function liveAccounts()
     {
-        return $this->belongsToMany(LiveAccount::class, 'account_category');
+        return $this->belongsToMany(LiveAccount::class, 'live_account_category');
     }
 }

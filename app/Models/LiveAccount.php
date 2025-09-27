@@ -15,6 +15,6 @@ class LiveAccount extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'account_category');
+        return $this->belongsToMany(Category::class, 'live_account_category');
     }
 }

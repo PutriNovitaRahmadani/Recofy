@@ -1,4 +1,4 @@
-    :root {
+:root {
   --primary: #4f46e5;
   --bg: #f5f7fa;
   --text-dark: #1f2937;
@@ -33,6 +33,10 @@ body {
   font-size: 13px;
   transition: width 0.3s ease;
   z-index: 1000;
+  display: flex;               /* tambahkan ini */
+  flex-direction: column;      /* tambahkan ini */
+  justify-content: space-between;
+  padding-bottom: 20px;
 }
 
 .sidebar.collapsed {
@@ -117,16 +121,36 @@ body {
   width: 100%;
   font-size: 15px;
 }
-
-.main-content {
-  margin-left: 240px;
-  width: calc(100% - 240px);
-  transition: margin-left 0.3s ease;
+.logout-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.main-content.expanded {
-  margin-left: 70px;
-  width: calc(100% - 70px);
+.logout-btn {
+  width: 180px; /* ❗ Lebar lebih nyaman */
+  padding: 10px 16px; /* ❗ Tambahkan padding horizontal */
+  font-size: 14px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff2e2e;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn i {
+  margin-right: 6px;
+}
+
+.logout-btn:hover {
+  background-color: #cc1f1f;
+}
+.sidebar.collapsed .logout-text {
+  display: none;
 }
 
 .sidebar.collapsed .logo {
@@ -150,10 +174,6 @@ body {
   margin: 0 auto;
 }
 
-.navbar {
-  left: 240px;
-  transition: left 0.3s ease;
-}
 
 .sidebar.collapsed ~ .main-content .navbar {
   left: 70px;
@@ -163,6 +183,18 @@ body {
   left: 70px;
 }
 
+/* Main Content */
+/* Main Content */
+.main-content {
+  margin-left: 240px;
+  width: calc(100% - 240px);
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
 /* Navbar */
 .navbar {
   height: 60px;
@@ -184,10 +216,12 @@ body {
   left: 70px;
 }
 
+/* Isi konten dashboard */
 .dashboard {
   padding: 80px 30px 30px 30px;
 }
 
+/* User area (Hi, Nama dan avatar) */
 .user-area {
   display: flex;
   align-items: center;
@@ -195,13 +229,13 @@ body {
   position: relative;
 }
 
+/* Avatar bulat */
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-  position: relative;
 }
 
 .avatar img {
@@ -210,20 +244,25 @@ body {
   object-fit: cover;
 }
 
-.chevron-icon {
-  font-size: 12px;
+/* Greeting */
+.greetingg {
+  font-size: 14px;
   color: #333;
+  font-weight: 500;
 }
 
+
     /* === FORM SECTION === */
-   /* Navigasi Tab */
-/* WRAPPER & BACKGROUND */
+ /* === FORM SECTION === */
 .tab-wrapper {
   padding: 60px 20px;
   max-width: 800px;
-  margin: 50px auto 70px; /* Lebih dekat ke navbar */
+  margin: 50px auto 10px;
   border-radius: 12px;
+  width: 100%;                /* ✅ Ini penting agar fleksibel */
+  box-sizing: border-box;     /* ✅ Ini agar padding tidak menambah lebar */
 }
+
 
 /* TAB NAVIGATION */
 .tab-navigation {
@@ -279,7 +318,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 80px;
+  gap: 60px;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -386,3 +425,30 @@ body {
   margin: 0 auto;
 }
 
+.popup-notification {
+  position: fixed;
+  top: 60px;
+  right: 380px; /* Ubah angka ini untuk lebih ke kiri atau ke kanan */
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.popup-notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popup-notification i {
+  font-size: 18px; /* Icon tidak terlalu besar */
+}

@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LiveAccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LiveAccountCategoryController;
+use App\Http\Controllers\ScheduleController;
 
 
 // Route utama login
@@ -53,10 +54,8 @@ Route::put('/live-accounts/{id}', [LiveAccountController::class, 'update'])->nam
 Route::delete('/live-accounts/{id}', [LiveAccountController::class, 'destroy'])->name('live-accounts.destroy');
 
 Route::get('/produk', [ProductController::class, 'index'])->middleware('auth');
-
-Route::get('/schedule', function () {
-    return view('schedule');
-});
+Route::get('/kategori', [CategoryController::class, 'index'])->middleware('auth');
+Route::get('/schedule', [ScheduleController::class, 'index'])->middleware('auth');
 
 Route::get('/live-accounts/{liveAccount}/categories', [LiveAccountCategoryController::class, 'edit'])
     ->name('live_accounts.categories.edit');
