@@ -21,11 +21,12 @@ body {
   display: flex;
 }
 
+/* === SIDEBAR === */
 .sidebar {
   width: 240px;
   background: var(--white);
   height: 100vh;
-  padding: 20px 10px 10px;
+  padding: 5px 5px 5px;
   border-right: 1px solid #e5e7eb;
   position: fixed;
   left: 0;
@@ -50,41 +51,36 @@ body {
 
 .logo {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 25px;
-  padding: 0 10px;
+  flex-direction: column; /* Biar logo dan teks diatur vertikal */
+  align-items: center;    /* Tengah secara horizontal */
+  justify-content: center; /* Tengah secara vertikal */
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 10px; /* beri jarak dari atas */
 }
 
-.logo .brand {
+.logo .brand img {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--primary);
-}
-
-.logo .brand i,
-.logo .brand span {
-  color: var(--primary);
+  margin-right: 15px;
+  margin-bottom: 30px;
+  width: 130px;
 }
 
 .logo .bars-wrapper {
   background-color: #fff;
   padding: 5px 10px;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 10px;
+  margin-top: -70px; 
 }
 
 .logo .bars-wrapper i {
   color: #000;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .sidebar ul {
   list-style: none;
-  margin-top: 10px;
+  margin-top: 5px;
   padding: 0;
 }
 

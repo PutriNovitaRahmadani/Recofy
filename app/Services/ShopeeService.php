@@ -4,7 +4,6 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
-use Illuminate\Support\Facades\Storage;
 
 class ShopeeService
 {
@@ -20,25 +19,18 @@ class ShopeeService
             'timeout'  => 30,
             'headers' => [
                 'Accept'             => '*/*',
-                'Accept-Language'    => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7,ms;q=0.6',
+                'Accept-Language'    => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
                 'User-Agent'         => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
-                'Referer'            => 'https://shopee.co.id/?is_from_login=true',
+                'Referer'            => 'https://shopee.co.id/',
                 'X-Requested-With'   => 'XMLHttpRequest',
                 'X-Api-Source'       => 'pc',
                 'X-Shopee-Language'  => 'id',
-                'Sec-Fetch-Site'     => 'same-origin',
-                'Sec-Fetch-Mode'     => 'cors',
-                'Sec-Fetch-Dest'     => 'empty',
-                'Sec-CH-UA'          => '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
-                'Sec-CH-UA-Platform' => '"Windows"',
-                'Sec-CH-UA-Mobile'   => '?0',
+                'Content-Type'       => 'application/json',
+                'Origin'             => 'https://shopee.co.id',
             ],
         ]);
     }
 
-    /**
-     * Load cookies dari file JSON ke CookieJar
-     */
     protected function loadCookies(): CookieJar
     {
         if (!file_exists($this->cookiePath)) {
@@ -54,15 +46,15 @@ class ShopeeService
         return CookieJar::fromArray($cookieArray, '.shopee.co.id');
     }
 
-    /**
-     * Merge cookies baru dari response Set-Cookie ke file JSON
-     */
     protected function saveCookies($response): void
     {
         $setCookies = $response->getHeader('Set-Cookie');
         if (empty($setCookies)) return;
 
-        $existing = json_decode(file_get_contents($this->cookiePath) ?? '[]', true);
+        $existing = [];
+        if (file_exists($this->cookiePath)) {
+            $existing = json_decode(file_get_contents($this->cookiePath), true) ?? [];
+        }
 
         foreach ($setCookies as $set) {
             $parts = explode(';', $set);
@@ -97,20 +89,103 @@ class ShopeeService
         file_put_contents($this->cookiePath, json_encode($existing, JSON_PRETTY_PRINT));
     }
 
-    /**
-     * Ambil kategori dari Shopee
-     */
-    public function getCategories(): array
+    protected function getCsrfToken(): ?string
+    {
+        if (!file_exists($this->cookiePath)) {
+            return null;
+        }
+        $cookies = json_decode(file_get_contents($this->cookiePath), true);
+        foreach ($cookies as $cookie) {
+            if ($cookie['name'] === 'csrftoken') {
+                return $cookie['value'];
+            }
+        }
+        return null;
+    }
+
+    protected function get($uri, $query = [])
     {
         $cookieJar = $this->loadCookies();
-
-        $response = $this->client->get('/api/v4/pages/get_category_tree', [
+        $response = $this->client->get($uri, [
             'cookies' => $cookieJar,
+            'query'   => $query,
         ]);
 
         $this->saveCookies($response);
+        return json_decode($response->getBody(), true);
+    }
 
-        $data = json_decode($response->getBody(), true);
-        return $data['data'] ?? [];
+    protected function post($uri, $payload = [])
+    {
+        $cookieJar = $this->loadCookies();
+        $csrfToken = $this->getCsrfToken();
+
+        $response = $this->client->post($uri, [
+            'cookies' => $cookieJar,
+            'headers' => [
+                'x-csrftoken' => $csrfToken,
+                'referer'     => 'https://shopee.co.id/',
+                'origin'      => 'https://shopee.co.id',
+                'content-type'=> 'application/json',
+            ],
+            'json' => $payload,
+        ]);
+
+        $this->saveCookies($response);
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    /**
+     * Ambil semua kategori
+     */
+    public function getCategories(): array
+    {
+        $data = $this->get('/api/v4/pages/get_category_tree');
+        return $data['data']['category_list'] ?? [];
+    }
+
+    /**
+     * ✅ Ambil rekomendasi produk per kategori
+     */
+    public function getRecommend($catid, $offset = 0, $limit = 10)
+    {
+        $payload = [
+            'bundle' => 'category_landing_page',
+            'catid'  => (int) $catid,
+            'limit'  => (int) $limit,
+            'offset' => (int) $offset,
+        ];
+
+        return $this->post('/api/v4/recommend/recommend_v2', $payload);
+    }
+
+    /**
+     * Ambil produk per kategori (umum)
+     */
+    public function getProductsByCategory($catid, $offset = 0, $limit = 60)
+    {
+        $query = [
+            'by'        => 'pop',
+            'limit'     => (int) $limit,
+            'match_id'  => (int) $catid,
+            'newest'    => (int) $offset,
+            'order'     => 'desc',
+            'page_type' => 'category',
+        ];
+
+        return $this->get('/api/v4/search/search_items', $query);
+    }
+
+    /**
+     * Ambil detail produk
+     */
+    public function getProductDetail($itemId, $shopId)
+    {
+        $query = [
+            'itemid' => (int) $itemId,
+            'shopid' => (int) $shopId
+        ];
+
+        return $this->get('/api/v4/item/get', $query);
     }
 }

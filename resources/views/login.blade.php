@@ -6,14 +6,14 @@
   <link rel="stylesheet" href="{{ asset('assets/css/login.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Admin - Tokolabs</title>
-  <link rel="icon" href="{{ asset('assets/img/LogoTokolabs.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('assets/img/recofy.png') }}" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 <body>
   <div class="container">
     <div class="left">
-      <img src="/assets/img/tokolabs.png" alt="Ilustrasi Login Tokolabs" />
+      <img src="/assets/img/recofy.png" alt="Ilustrasi Login Tokolabs" />
     </div>
     <div class="right">
       <h2>Welcome Back!</h2>
@@ -50,7 +50,7 @@
   <!-- Modal Lupa Password -->
 <div id="modal" class="modal" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
   <div class="modal-box" style="background:#fff; padding:20px; border-radius:8px; max-width:400px; width:100%; text-align:center;">
-    <img src="/assets/img/tokolabs.png" alt="Lock Icon" style="max-width: 100px; margin-bottom: 10px;">
+    <img src="/assets/img/4-foto.png" alt="Lock Icon" style="max-width: 100px; margin-bottom: 10px;">
     <h3>Lupa Password</h3>
 
     {{-- Form Kirim / Verifikasi OTP --}}

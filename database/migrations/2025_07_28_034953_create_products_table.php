@@ -12,36 +12,37 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->bigInteger('item_id')->unique(); // Shopee item id
-        $table->string('title');
-        $table->string('image')->nullable();
-        $table->timestamp('ctime')->nullable();
+            // jadikan item_id sebagai primary key
+            $table->unsignedBigInteger('item_id')->primary(); // Shopee item id
 
-        // review data
-        $table->float('rating_star')->nullable();
-        $table->integer('rating_count')->default(0);
-        $table->integer('liked_count')->default(0);
+            $table->string('title');
+            $table->string('image')->nullable();
+            
+            // simpan ctime dalam bentuk epoch (Unix timestamp)
+            $table->bigInteger('ctime')->nullable();
 
-        // harga
-        $table->bigInteger('price_min_before_discount')->nullable();
-        $table->bigInteger('price_max_before_discount')->nullable();
-        $table->bigInteger('price_min')->nullable();
-        $table->bigInteger('price_max')->nullable();
+            // review data
+            $table->float('rating_star')->nullable();
+            $table->integer('rating_count')->default(0);
+            $table->integer('liked_count')->default(0);
 
-        // penjualan
-        $table->integer('historical_sold')->default(0);
+            // harga
+            $table->bigInteger('price_min')->nullable();
+            $table->bigInteger('price_max')->nullable();
 
-        // kategori utama (1 produk hanya punya 1 kategori utama)
-        $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            // penjualan
+            $table->integer('historical_sold')->default(0);
 
-        // link & komisi
-        $table->string('product_link')->nullable();
-        $table->decimal('commission', 10, 2)->nullable();
-        $table->decimal('seller_commission', 10, 2)->nullable();
-        $table->decimal('shopee_commission', 10, 2)->nullable();
+            // stok barang
+            $table->integer('stock')->default(0);
 
-        $table->timestamps();
+            // link & komisi
+            $table->string('product_link')->nullable();
+            $table->bigInteger('commission')->nullable();
+            $table->bigInteger('seller_commission')->nullable();
+            $table->bigInteger('shopee_commission')->nullable();
+
+            $table->timestamps();
         });
     }
 

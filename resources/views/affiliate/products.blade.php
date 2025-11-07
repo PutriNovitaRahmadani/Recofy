@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="{{ asset('assets/css/produk.css') }}?v={{ time() }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* Tambahan styling agar posisi checkbox di pojok kanan bawah card */
     .produk-item {
       position: relative;
     }
@@ -18,28 +17,27 @@
       right: 8px;
       width: 20px;
       height: 20px;
-      accent-color: #4f46e5; /* warna biru indigo */
+      accent-color: #4f46e5;
       cursor: pointer;
     }
-    
   </style>
 </head>
 <body>
   <div class="container">
-     <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-  <div class="menu-container">
-    <div class="logo">
-      <div class="brand">
-       <img src="/assets/img/4-foto.png">
-      </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="menu-container">
+        <div class="logo">
+          <div class="brand">
+            <img src="/assets/img/4-foto.png">
+          </div>
           <div class="bars-wrapper" id="toggleSidebar">
             <i class="fa-solid fa-bars"></i>
           </div>
         </div>
         <ul>
           <li><a href="{{ url('dashboard') }}"><i class="fa-solid fa-gauge-high"></i> <span class="menu-text">Dashboard</span></a></li>
-          <li class="produk active"><a href="#"><i class="fa-solid fa-cart-shopping"></i> <span class="menu-text">Rekomendasi Produk</span></a></li>
+          <li class="products active"><a href="#"><i class="fa-solid fa-cart-shopping"></i> <span class="menu-text">Rekomendasi Produk</span></a></li>
           <li><a href="{{ url('schedule') }}"><i class="fa-solid fa-calendar-days"></i> <span class="menu-text">Scheduler</span></a></li>
           <li><a href="{{ url('akun') }}"><i class="fa-solid fa-gear"></i> <span class="menu-text">Pengaturan Akun</span></a></li>
         </ul>
@@ -57,7 +55,7 @@
       <div class="navbar">
         <div class="nav-title">Rekomendasi Produk</div>
         <div class="user-area">
-          <div class="greetingg">Hi, {{ auth()->user()->username ?? auth()->user()->name }}!</div>
+          <div class="greetingg">Hi, {{ $user ? ($user->username ?? $user->name) : 'Guest' }}!</div>
           <a href="{{ route('profile') }}">
             <div class="avatar" style="cursor: pointer;">
               <img src="{{ auth()->user()->img_profile ? asset('img_profiles/' . auth()->user()->img_profile) : asset('assets/img/pp kosong.jpg') }}" alt="Profil" />
@@ -71,7 +69,7 @@
         <div class="filter-search flex items-center justify-between gap-3">
 
           <!-- Search Bar -->
-          <form action="{{ route('produk.index') }}" method="GET" class="flex w-full max-w-xl">
+          <form action="{{ route('products.index') }}" method="GET" class="flex w-full max-w-xl">
             <input 
               type="text" 
               name="search" 
@@ -91,12 +89,12 @@
           </form>
 
           <!-- Checkbox Pilih Semua Produk -->
-        <div class="pilih-semua flex items-center gap-2">
-          <input type="checkbox" id="pilihSemua" class="w-4 h-4 cursor-pointer accent-indigo-600">
-          <label for="pilihSemua" class="text-sm text-gray-700 select-none cursor-pointer">
-            Pilih semua produk di halaman ini
-          </label>
-        </div>
+          <div class="pilih-semua flex items-center gap-2">
+            <input type="checkbox" id="pilihSemua" class="w-4 h-4 cursor-pointer accent-indigo-600">
+            <label for="pilihSemua" class="text-sm text-gray-700 select-none cursor-pointer">
+              Pilih semua produk di halaman ini
+            </label>
+          </div>
 
           <!-- Dropdown Urutkan -->
           <div class="dropdown-group">
@@ -114,72 +112,73 @@
                 <option value="rating_tertinggi" {{ $sort == 'rating_tertinggi' ? 'selected' : '' }}>Rating Tertinggi</option>
                 <option value="terlaris" {{ $sort == 'terlaris' ? 'selected' : '' }}>Terlaris</option>
                 <option value="terbaru" {{ $sort == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                <option value="trending" {{ $sort == 'trending' ? 'selected' : '' }}>Trending 🔥</option>
               </select>
             </form>
           </div>
         </div>
       </div>
 
-      <div class="pagination-wrapper" id="paginationTop"></div>
-
       <!-- Grid Produk -->
-      <div class="produk-container" id="produkContainer">
-        <div class="produk-grid">
-          @forelse ($products as $item)
-            <a href="{{ route('produk.detail', $item->item_id) }}" class="produk-item-link">
-              <div class="produk-item relative">
-                @if(isset($item->commission))
-                  <div class="produk-komisi">
-                    Rp {{ number_format($item->commission, 0, ',', '.') }}
-                  </div>
+      <div class="produk-grid">
+    @forelse ($products as $item)
+        <a href="{{ $item->product_link }}" target="_blank" class="produk-item-link">
+            <div class="produk-item relative">
+                {{-- Komisi --}}
+                @if(isset($item->commission_nominal))
+                    <div class="produk-komisi">
+                         Rp {{ number_format($item->commission_nominal / 1000, 0, ',', '.') }}
+                    </div>
                 @endif
 
-                <img src="{{ $item->image_full_url }}" alt="Gambar Produk" class="produk-img">
+                <img src="{{ $item->image }}" alt="Gambar Produk" class="produk-img">
+
                 <div class="produk-info">
-                  <div class="produk-header">
-                    <div class="produk-rating">
-                      <span class="rating-icon">⭐</span>{{ number_format($item->rating_star ?? 0, 1) }}
+                    <div class="produk-header">
+                        <div class="produk-rating">
+                            <span class="rating-icon">⭐</span>{{ number_format($item->rating_star ?? 0, 1) }}
+                        </div>
+                        <span class="produk-harga">
+                            Rp {{ number_format($item->price_min / 1000, 0, ',', '.') }}
+                            @if(isset($item->price_max) && $item->price_max != $item->price_min)
+                                - Rp {{ number_format($item->price_max / 1000, 0, ',', '.') }}
+                            @endif
+                        </span>
                     </div>
-                    <span class="produk-harga">{{ $item->price_formatted }}</span>
-                  </div>
-                  <div class="produk-nama">
-                    {{ \Illuminate\Support\Str::limit($item->title ?? $item->name ?? '-', 40) }}
-                  </div>
-                  <div class="produk-rating-terjual">
-                    <div class="produk-terjual">{{ $item->sold_formatted }}</div>
-                  </div>
+
+                    <div class="produk-nama">
+                        {{ \Illuminate\Support\Str::limit($item->title ?? '-', 100) }}
+                    </div>
+
+                    <div class="produk-rating-terjual">
+                        <div class="produk-terjual">
+                            {{ $item->historical_sold >= 1000 ? round($item->historical_sold/1000).'k' : $item->historical_sold }} terjual
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Checkbox di pojok kanan bawah -->
-                <input 
-                  type="checkbox" 
-                  class="produk-checkbox"
-                  value="{{ $item->product_link }}">
-              </div>
-            </a>
-          @empty
-            <p>Tidak ada produk ditemukan.</p>
-          @endforelse
-        </div>
-      </div>
+                <input type="checkbox" class="produk-checkbox" value="{{ $item->product_link }}">
+            </div>
+        </a>
+    @empty
+        <p>Tidak ada produk ditemukan.</p>
+    @endforelse
+</div>
 
       <div class="buat-link-container flex items-center justify-end gap-4">
-      <!-- Jumlah produk dicentang -->
-      <div id="jumlahChecklist" class="text-gray-700 text-sm font-medium">
-        0 produk dipilih
+        <div id="jumlahChecklist" class="text-gray-700 text-sm font-medium">
+          0 produk dipilih
+        </div>
+
+        <button id="batalChecklist" class="btn-batal">
+          <span>Batal</span>
+        </button>
+
+        <button id="buatLinkMassal" class="btn-buat-link">
+          <i class="fa-solid fa-circle-plus"></i>
+          <span>Buat Link masal</span>
+        </button>
       </div>
-
-      <!-- Tombol Batal -->
-      <button id="batalChecklist" class="btn-batal">
-        <span>Batal</span>
-      </button>
-
-      <!-- Tombol Buat Link Masal -->
-      <button id="buatLinkMassal" class="btn-buat-link">
-        <i class="fa-solid fa-circle-plus"></i>
-        <span>Buat Link masal</span>
-      </button>
-    </div>
 
       <!-- Pagination Laravel -->
       @if ($products->hasPages())
@@ -208,7 +207,7 @@
       mainContent.classList.toggle('expanded');
     });
 
-    // ✅ Buat file CSV berisi link produk yang dicentang
+    // CSV dari produk yang dicentang
     document.getElementById("buatLinkMassal").addEventListener("click", function() {
       const checked = document.querySelectorAll(".produk-checkbox:checked");
       if (checked.length === 0) {
@@ -230,7 +229,7 @@
       document.body.removeChild(link);
     });
 
-    // ✅ Update jumlah produk yang dicentang secara real-time
+    // Update jumlah produk dicentang
     const jumlahChecklist = document.getElementById("jumlahChecklist");
     const checkboxes = document.querySelectorAll(".produk-checkbox");
 
@@ -239,28 +238,19 @@
       jumlahChecklist.textContent = `${count} produk dipilih`;
     }
 
-    // Jalankan update saat checkbox diubah
     checkboxes.forEach(chk => {
       chk.addEventListener("change", updateJumlahChecklist);
     });
 
-    // Reset jumlah jika tombol batal ditekan
     document.getElementById("batalChecklist").addEventListener("click", function() {
       checkboxes.forEach(chk => chk.checked = false);
       updateJumlahChecklist();
-
-      // ✅ Jika sebelumnya "Pilih Semua" aktif, matikan juga
       const pilihSemua = document.getElementById("pilihSemua");
-      if (pilihSemua.checked) {
-        pilihSemua.checked = false;
-      }
-
+      if (pilihSemua.checked) pilihSemua.checked = false;
       alert("Semua produk yang dipilih akan dibatalkan!");
     });
 
-    // ✅ Fungsi Pilih Semua Produk
     const pilihSemua = document.getElementById("pilihSemua");
-
     if (pilihSemua) {
       pilihSemua.addEventListener("change", function() {
         const allCheckboxes = document.querySelectorAll(".produk-checkbox");

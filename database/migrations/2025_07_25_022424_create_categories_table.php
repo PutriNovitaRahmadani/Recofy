@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('catid')->unique(); // Shopee category id
             $table->string('display_name');
+            $table->string('image_url')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });

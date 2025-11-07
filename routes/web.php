@@ -11,6 +11,8 @@ use App\Http\Controllers\LiveAccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LiveAccountCategoryController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ProductMetadataController;
+use App\Http\Controllers\ProductAffiliateController;
 
 
 // Route utama login
@@ -53,7 +55,10 @@ Route::get('/live-accounts/{id}/edit', [LiveAccountController::class, 'edit'])->
 Route::put('/live-accounts/{id}', [LiveAccountController::class, 'update'])->name('live-accounts.update');
 Route::delete('/live-accounts/{id}', [LiveAccountController::class, 'destroy'])->name('live-accounts.destroy');
 
-Route::get('/produk', [ProductController::class, 'index'])->middleware('auth');
+Route::get('/produk', [ProductController::class, 'index'])
+    ->middleware('auth')
+    ->name('produk.index');
+Route::get('/produk/{id}', [ProductController::class, 'show'])->name('produk.detail');
 Route::get('/kategori', [CategoryController::class, 'index'])->middleware('auth');
 Route::get('/schedule', [ScheduleController::class, 'index'])->middleware('auth');
 
@@ -79,3 +84,14 @@ Route::get('/forgot-password/reset', function () {
     session(['show_modal' => true]);
     return redirect()->route('login');
 })->name('modal.forgot-password.reset');
+
+Route::get('/detail', function () {
+    return view('detail'); // file resources/views/detail.blade.php
+})->name('detail');
+
+
+
+Route::get('/products', [ProductAffiliateController::class, 'index'])
+    ->name('products.index')
+    ->middleware('auth');
+Route::get('/products/{id}', [ProductAffiliateController::class, 'show'])->name('products.detail'); 

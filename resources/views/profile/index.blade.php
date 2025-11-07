@@ -43,7 +43,7 @@
 
   <meta charset="UTF-8">
   <title>Pengaturan Akun - TokoLabs</title>
-  <link rel="icon" href="{{ asset('assets/img/LogoTokolabs.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('assets/img/4-fotor-2025102710195.png') }}" type="image/png">
   <link rel="stylesheet" href="{{ asset('assets/css/index_profile.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -54,13 +54,12 @@
       <span id="notif-message">Notifikasi</span>
     </div>
 
-    <!-- Sidebar -->
+ <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
   <div class="menu-container">
     <div class="logo">
       <div class="brand">
-        <i class="fa-solid fa-shop"></i>
-        <span class="brand-text">TokoLabs</span>
+       <img src="/assets/img/4-foto.png">
       </div>
       <div class="bars-wrapper" id="toggleSidebar">
         <i class="fa-solid fa-bars"></i>

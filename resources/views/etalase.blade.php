@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Rekomendasi Produk - TokoLabs</title>
-  <link rel="icon" href="{{ asset('assets/img/LogoTokolabs.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('assets/img/recofy.png') }}" type="image/png">
   <link rel="stylesheet" href="{{ asset('assets/css/etalase.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <!-- Sidebar -->
+   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
   <div class="menu-container">
     <div class="logo">
       <div class="brand">
-        <i class="fa-solid fa-shop"></i>
-        <span class="brand-text">TokoLabs</span>
+       <img src="/assets/img/4-foto.png">
       </div>
       <div class="bars-wrapper" id="toggleSidebar">
         <i class="fa-solid fa-bars"></i>
@@ -106,7 +105,7 @@
         <a href="{{ route('live_accounts.categories.edit', $akun->id) }}" class="btn-atur">
           <i class="fa-solid fa-gear"></i> Atur Kategori
         </a>
-        <a href="{{ url('produk') }}" class="btn-lihat">
+        <a href="{{ url('products') }}" class="btn-lihat">
           <i class="fa-solid fa-cart-shopping"></i> Lihat Semua Produk
         </a>
       </div>

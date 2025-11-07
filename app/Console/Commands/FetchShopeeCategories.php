@@ -8,60 +8,33 @@ use App\Models\Category;
 
 class FetchShopeeCategories extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'shopee:fetch-categories';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fetch categories from Shopee, save to database recursively';
-
     protected $shopeeService;
 
-    /**
-     * Create a new command instance.
-     *
-     * @param ShopeeService $shopeeService
-     */
     public function __construct(ShopeeService $shopeeService)
     {
         parent::__construct();
         $this->shopeeService = $shopeeService;
     }
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $this->info("Fetching categories from Shopee...");
 
-        $response = $this->shopeeService->getCategories();
-
-        // Ambil category_list dari response (ShopeeService sudah return $data['data'])
-        $categories = $response['category_list'] ?? [];
+        $categories = $this->shopeeService->getCategories();
 
         if (empty($categories)) {
             $this->warn("No categories found.");
             return 0;
         }
 
-        // Cetak semua kategori secara rekursif dan simpan ke database
         $this->printCategories($categories);
 
         $this->info("Total top-level categories: " . count($categories));
         return 1;
     }
 
-    /**
-     * Recursive function untuk print kategori dan children
-     */
     private function printCategories(array $categories, string $prefix = '', $parentCatId = null)
     {
         foreach ($categories as $cat) {
@@ -69,13 +42,16 @@ class FetchShopeeCategories extends Command
             $displayName = $cat['display_name'] ?? null;
 
             if ($catid) {
-                // 1. Simpan kategori
+                $imageUrl = isset($cat['image']) ? "https://cf.shopee.co.id/file/{$cat['image']}" : null;
+
                 $category = Category::updateOrCreate(
                     ['catid' => $catid],
-                    ['display_name' => $displayName]
+                    [
+                        'display_name' => $displayName,
+                        'image_url'    => $imageUrl,
+                    ]
                 );
 
-                // 2. Kalau ada parent_catid, update parent_id
                 if ($parentCatId) {
                     $parent = Category::where('catid', $parentCatId)->first();
                     if ($parent) {
@@ -83,11 +59,10 @@ class FetchShopeeCategories extends Command
                         $category->save();
                     }
                 }
+
+                $this->line("{$prefix}ID: {$catid} | Name: {$displayName}");
             }
 
-            $this->line("{$prefix}ID: {$catid} | Name: {$displayName}");
-
-            // Rekursif untuk children
             if (!empty($cat['children']) && is_array($cat['children'])) {
                 $this->printCategories($cat['children'], $prefix . '--', $catid);
             }

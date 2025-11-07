@@ -67,15 +67,25 @@ class CategoryController extends Controller
                 'parent'
             ]);
 
-            // simpan/update ke DB (casting ke int untuk catid/parent)
-            Category::updateOrCreate(
-                ['catid' => (int) $catid],
-                [
-                    'display_name' => $displayName,
-                    'parent_id'    => $parentId !== null ? (int) $parentId : null,
-                ]
-            );
-        }
+            // ambil gambar dari beberapa kemungkinan key
+$image = $this->findFirst($cat, [
+    'image',
+    'image_url',
+    'icon',
+    'img',
+    'picture'
+]);
+
+// simpan/update ke DB (casting ke int untuk catid/parent)
+Category::updateOrCreate(
+    ['catid' => (int) $catid],
+    [
+        'display_name' => $displayName,
+        'parent_id'    => $parentId !== null ? (int) $parentId : null,
+        'image_url'    => $image, // ✅ tambahkan ini
+    ]
+);
+
 
         // 4. Ambil dari DB dan kirim ke view
         $categories = Category::all();
