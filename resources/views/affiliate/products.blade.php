@@ -112,7 +112,6 @@
                 <option value="rating_tertinggi" {{ $sort == 'rating_tertinggi' ? 'selected' : '' }}>Rating Tertinggi</option>
                 <option value="terlaris" {{ $sort == 'terlaris' ? 'selected' : '' }}>Terlaris</option>
                 <option value="terbaru" {{ $sort == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                <option value="trending" {{ $sort == 'trending' ? 'selected' : '' }}>Trending 🔥</option>
               </select>
             </form>
           </div>
