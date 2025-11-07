@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('live_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Nama akun Shopee Live
-            $table->foreignId('studio_id')->constrained()->onDelete('cascade'); // Relasi ke studio
+            $table->string('name');
+            $table->foreignId('studio_id')->constrained()->onDelete('cascade');
+            $table->text('cookie_header')->nullable();
             $table->timestamps();
         });
     }

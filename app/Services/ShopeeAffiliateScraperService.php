@@ -75,9 +75,9 @@ class ShopeeAffiliateScraperService
                     'shop_id' => $basic['shopid'] ?? null,
                     'title' => $basic['name'] ?? null,
                     'image' => isset($basic['images'][0])
-                        ? "https://down-id.img.susercontent.com/file/{$basic['images'][0]}"
-                        : null,
-                    'images' => $basic['images'] ?? [],
+            ? "https://down-id.img.susercontent.com/file/{$basic['images'][0]}"
+            : null,
+        'images' => isset($basic['images']) ? json_encode($basic['images']) : null,
                     'product_link' => $item['product_link'] ?? null,
                     'seller_name' => $basic['shop_name'] ?? null,
                     'price_min' => $priceMin,
